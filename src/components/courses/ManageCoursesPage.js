@@ -1,10 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { loadCourses } from '../../redux/actions/courseActions';
 import { loadAuthors } from '../../redux/actions/authorActions';
 import PropTypes from 'prop-types';
+import CourseForm from './CourseForm';
+import { newCourse } from '../../../tools/mockData';
 
-function ManageCoursesPage({ courses, authors, loadCourses, loadAuthors }) {
+function ManageCoursesPage({
+	courses,
+	authors,
+	loadCourses,
+	loadAuthors,
+	...props
+}) {
+	const [course, setCourse] = useState({ ...props.course });
+
 	useEffect(() => {
 		if (courses.length === 0) {
 			loadCourses().catch((error) => {
@@ -26,6 +36,7 @@ function ManageCoursesPage({ courses, authors, loadCourses, loadAuthors }) {
 }
 
 ManageCoursesPage.propTypes = {
+	course: PropTypes.object.isRequired,
 	authors: PropTypes.array.isRequired,
 	courses: PropTypes.array.isRequired,
 	loadCourses: PropTypes.func.isRequired,
@@ -34,6 +45,7 @@ ManageCoursesPage.propTypes = {
 
 function mapStateToProps(state) {
 	return {
+		course: newCourse,
 		courses: state.authors,
 		authors: state.authors,
 	};
