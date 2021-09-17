@@ -4,6 +4,7 @@ import { loadCourses, saveCourse } from '../../redux/actions/courseActions';
 import { loadAuthors } from '../../redux/actions/authorActions';
 import PropTypes from 'prop-types';
 import CourseForm from './CourseForm';
+import Spinner from '../common/Spinner';
 import { newCourse } from '../../../tools/mockData';
 
 function ManageCoursesPage({
@@ -23,13 +24,13 @@ function ManageCoursesPage({
 			loadCourses().catch((error) => {
 				alert('Loading courses failed: ' + error);
 			});
+		} else {
+			setCourse({ ...props.course });
 		}
 		if (authors.length === 0) {
 			loadAuthors().catch((error) => {
 				alert('Loading authors failed: ' + error);
 			});
-		} else {
-			setCourse(...props.course);
 		}
 	}, [props.course]);
 
@@ -48,7 +49,9 @@ function ManageCoursesPage({
 		});
 	}
 
-	return (
+	return authors.length === 0 || courses.length === 0 ? (
+		<Spinner />
+	) : (
 		<CourseForm
 			course={course}
 			errors={errors}
@@ -70,7 +73,7 @@ ManageCoursesPage.propTypes = {
 };
 
 export function getCourseBySlug(courses, slug) {
-	return courses.find((c) => c.slug === slug) || null;
+	return courses.find((course) => course.slug === slug) || null;
 }
 
 function mapStateToProps(state, ownProps) {
@@ -88,8 +91,8 @@ function mapStateToProps(state, ownProps) {
 
 const mapDispatchToProps = {
 	loadCourses,
-	saveCourse,
 	loadAuthors,
+	saveCourse,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCoursesPage);
