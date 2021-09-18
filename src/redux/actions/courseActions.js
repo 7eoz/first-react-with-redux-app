@@ -20,13 +20,14 @@ export function createCourseSuccess(course) {
 
 export function loadCourses() {
 	return function (dispatch) {
-		dispatch(beginApiCall);
+		dispatch(beginApiCall());
 		return courseApi
 			.getCourses()
 			.then((courses) => {
 				dispatch(loadCoursesSuccess(courses));
 			})
 			.catch((error) => {
+				dispatch(apiCallError(error));
 				throw error;
 			});
 	};
@@ -34,7 +35,7 @@ export function loadCourses() {
 
 export function saveCourse(course) {
 	return function (dispatch, getState) {
-		dispatch(beginApiCall);
+		dispatch(beginApiCall());
 		return courseApi
 			.saveCourse(course)
 			.then((savedCourse) => {
